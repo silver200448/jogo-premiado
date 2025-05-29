@@ -3,51 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <title>Bilhete Premiado</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/861/861404.png">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #111, #333);
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #1f1f1f, #292929);
       color: white;
       text-align: center;
-      padding: 40px;
+      padding: 40px 20px;
     }
     h1 {
       margin-bottom: 30px;
+      font-size: 28px;
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 20px;
       max-width: 600px;
-      margin: 0 auto;
+      margin: 0 auto 40px auto;
     }
     .ticket {
-      background-color: #555;
-      padding: 50px 0;
-      border-radius: 12px;
+      background-color: #444;
+      padding: 40px 0;
+      border-radius: 14px;
       cursor: pointer;
-      font-size: 20px;
-      transition: 0.3s;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       user-select: none;
     }
     .ticket:hover {
-      background-color: #777;
+      background-color: #666;
+      transform: scale(1.05);
     }
-    #restartBtn {
-      display: none;
-      margin-top: 30px;
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      background-color: #007bff;
+
+    .instagram-btn {
+      display: inline-block;
+      background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
       color: white;
-      cursor: pointer;
-    }
-    #apoio a {
-      margin: 0 10px;
-      font-weight: bold;
+      padding: 12px 24px;
+      border-radius: 30px;
       text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      transition: transform 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .instagram-btn:hover {
+      transform: scale(1.1);
     }
   </style>
 </head>
@@ -63,22 +73,13 @@
     <div class="ticket" onclick="reveal(this, 5)">Bilhete 6</div>
   </div>
 
-  <button id="restartBtn" onclick="restartGame()">Jogar Novamente</button>
-
-  <div id="apoio" style="display:none; margin-top: 40px;">
-    <h2>Curtiu o jogo? 🎉</h2>
-    <p>Me apoie seguindo no instagram! Isso me ajuda a continuar criando coisas legais. 😄</p>
-    <div style="margin: 15px;">
-      <a href="https://instagram.com/silverton_moreira" target="_blank" style="color: #e1306c;">📸 Instagram</a> |
-    </div>
-    <button onclick="compartilhar()" style="margin-top: 20px; padding: 10px 16px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer;">
-      Compartilhar com amigos 🔗
-    </button>
-  </div>
+  <a href="https://instagram.com/silverton_moreira" target="_blank" class="instagram-btn">
+    Me siga no Instagram 💜
+  </a>
 
   <script>
     const premios = ["💣", "💣", "💣", "💣", "💣", "🎉 Você ganhou!"];
-    let embaralhado = premios.sort(() => Math.random() - 0.5);
+    const embaralhado = premios.sort(() => Math.random() - 0.5);
     let jogoEncerrado = false;
 
     function reveal(element, index) {
@@ -98,39 +99,7 @@
 
       jogoEncerrado = true;
 
-      const tickets = document.querySelectorAll('.ticket');
-      tickets.forEach(t => t.onclick = null);
-
-      document.getElementById('restartBtn').style.display = "inline-block";
-      document.getElementById('apoio').style.display = "block";
-    }
-
-    function restartGame() {
-      embaralhado = premios.sort(() => Math.random() - 0.5);
-      jogoEncerrado = false;
-
-      const tickets = document.querySelectorAll('.ticket');
-      tickets.forEach((t, i) => {
-        t.innerHTML = `Bilhete ${i + 1}`;
-        t.style.backgroundColor = "#555";
-        t.style.color = "white";
-        t.onclick = () => reveal(t, i);
-      });
-
-      document.getElementById('restartBtn').style.display = "none";
-      document.getElementById('apoio').style.display = "none";
-    }
-
-    function compartilhar() {
-      if (navigator.share) {
-        navigator.share({
-          title: 'Jogo do Bilhete Premiado 🎯',
-          text: 'Tente a sorte neste jogo divertido!',
-          url: window.location.href
-        });
-      } else {
-        alert('Seu navegador não suporta compartilhamento direto.');
-      }
+      document.querySelectorAll('.ticket').forEach(t => t.onclick = null);
     }
   </script>
 
