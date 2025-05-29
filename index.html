@@ -12,6 +12,7 @@
       text-align: center;
       padding: 40px;
       overflow: hidden;
+      margin: 0;
     }
 
     h1 {
@@ -39,11 +40,13 @@
       user-select: none;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       animation: pulse 2s infinite;
+      transform-style: preserve-3d;
+      perspective: 1000px;
     }
 
     .ticket:hover {
       background-color: #666;
-      transform: scale(1.05);
+      transform: scale(1.05) rotateY(10deg);
     }
 
     @keyframes pulse {
@@ -89,7 +92,7 @@
       color: #f0f0f0;
     }
 
-    /* ANIMAÇÃO DE FUNDO (partículas suaves) */
+    /* ANIMAÇÃO DE PARTÍCULAS TECNOLÓGICAS */
     .particles {
       position: fixed;
       top: 0;
@@ -149,7 +152,7 @@
       Me siga e mande um oi, vou te falar mais sobre o Jogo:
     </div>
 
-    <a class="button instagram-button" href="https://instagram.com/seu_usuario" target="_blank">
+    <a class="button instagram-button" href="https://instagram.com/silverton_moreira" target="_blank">
       📷 Instagram
     </a>
   </div>
@@ -185,17 +188,6 @@
     }
 
     // Criar partículas animadas no fundo
-    const container = document.getElementById('particlesContainer');
-    for (let i = 0; i < 30; i++) {
-      const p = document.createElement('div');
-      p.classList.add('particle');
-      p.style.left = `${Math.random() * 100}%`;
-      p.style.animationDuration = `${6 + Math.random() * 5}s`;
-      p.style.animationDelay = `${Math.random() * 5}s`;
-      p.style.width = p.style.height = `${5 + Math.random() * 10}px`;
-      container.appendChild(p);
-    }
-  </script>
 
-</body>
-</html>
+::contentReference[oaicite:0]{index=0}
+ 
