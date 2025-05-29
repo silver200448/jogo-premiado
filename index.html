@@ -22,9 +22,9 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr); /* 3 colunas fixas */
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px;
-      max-width: 480px; /* largura para 3 bilhetes */
+      max-width: 480px;
       margin: 0 auto;
       z-index: 2;
       position: relative;
@@ -42,7 +42,6 @@
       transform-style: preserve-3d;
       perspective: 1000px;
       color: #fff;
-      /* animação padrão para bilhete */
       animation: pulse 2.5s ease-in-out infinite;
     }
 
@@ -57,7 +56,6 @@
       50% { transform: scale(1.05); }
     }
 
-    /* Sombras verdes para vencedor */
     .winner {
       background-color: #28a745 !important;
       box-shadow: 0 0 15px 5px #28a745;
@@ -69,7 +67,6 @@
       50% { box-shadow: 0 0 30px 10px #6be06b; }
     }
 
-    /* Sombras vermelhas para bomba */
     .loser {
       background-color: #c0392b !important;
       color: #fff !important;
@@ -143,20 +140,11 @@
     }
 
     @keyframes float {
-      0% {
-        transform: translateY(100vh) scale(0.3);
-        opacity: 0;
-      }
-      50% {
-        opacity: 0.8;
-      }
-      100% {
-        transform: translateY(-10vh) scale(1.2);
-        opacity: 0;
-      }
+      0% { transform: translateY(100vh) scale(0.3); opacity: 0; }
+      50% { opacity: 0.8; }
+      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
     }
 
-    /* fogos de artifício simples */
     #fireworksCanvas {
       position: fixed;
       top: 0;
@@ -165,6 +153,18 @@
       height: 100vh;
       pointer-events: none;
       z-index: 3;
+    }
+
+    /* Destaque extra para o bilhete vencedor */
+    .highlight {
+      animation: bounce 1s ease-in-out 3;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.2); }
+      50% { transform: scale(0.95); }
+      75% { transform: scale(1.1); }
     }
   </style>
 </head>
@@ -185,11 +185,9 @@
 
   <div class="buttons">
     <button class="button retry-button" onclick="location.reload()">Tentar Novamente</button>
-
     <div class="follow-message">
       Me siga e mande um oi, vou te falar mais sobre o Jogo😉
     </div>
-
     <a class="button instagram-button" href="https://instagram.com/silverton_moreira" target="_blank" rel="noopener noreferrer">
        Instagram
     </a>
@@ -221,6 +219,16 @@
         playSound('bombSound');
         vibrateDevice();
         alert("💥 Bomba! Você perdeu.");
+
+        // Revelar o bilhete premiado com destaque
+        const tickets = document.querySelectorAll('.ticket');
+        embaralhado.forEach((val, i) => {
+          if (val.includes("🎉")) {
+            const winningTicket = tickets[i];
+            winningTicket.innerHTML = val;
+            winningTicket.classList.add('winner', 'highlight');
+          }
+        });
       }
 
       jogoEncerrado = true;
@@ -230,7 +238,7 @@
     function playSound(id) {
       const audio = document.getElementById(id);
       audio.currentTime = 0;
-      audio.play().catch(() => {}); // evita erro se o som não puder tocar
+      audio.play().catch(() => {});
     }
 
     function vibrateDevice() {
@@ -239,7 +247,6 @@
       }
     }
 
-    // Criar partículas tecnológicas animadas
     const container = document.getElementById('particlesContainer');
     for (let i = 0; i < 40; i++) {
       const p = document.createElement('div');
@@ -251,7 +258,6 @@
       container.appendChild(p);
     }
 
-    // --- Fogos de artifício simples em canvas ---
     const canvas = document.getElementById('fireworksCanvas');
     const ctx = canvas.getContext('2d');
     let cw, ch;
@@ -293,7 +299,6 @@
         let vx = Math.cos(this.angle) * this.speed;
         let vy = Math.sin(this.angle) * this.speed;
         this.distanceTraveled = dist(this.sx, this.sy, this.x + vx, this.y + vy);
-
         if(this.distanceTraveled >= this.distanceToTarget) {
           createParticles(this.tx, this.ty);
           fireworks.splice(index,1);
@@ -336,7 +341,6 @@
         this.x += Math.cos(this.angle) * this.speed;
         this.y += Math.sin(this.angle) * this.speed + this.gravity;
         this.alpha -= this.decay;
-
         if(this.alpha <= 0) {
           particles.splice(index, 1);
         }
