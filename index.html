@@ -49,12 +49,6 @@
       background: linear-gradient(145deg, #444, #666);
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-      100% { transform: scale(1); }
-    }
-
     .buttons {
       margin-top: 40px;
     }
@@ -149,13 +143,14 @@
       Me siga e mande um oi, vou te falar mais sobre o Jogo:
     </div>
 
-    <a class="button instagram-button" href="https://instagram.com/silverton_moreira" target="_blank">
+    <a class="button instagram-button" href="https://instagram.com/silverton-moreira" target="_blank">
       📷 Instagram
     </a>
   </div>
 
-  <audio id="winSound" src="https://www.myinstants.com/media/sounds/tuturu.mp3"></audio>
-  <audio id="bombSound" src="https://www.myinstants.com/media/sounds/explosion.mp3"></audio>
+  <!-- Áudios corrigidos -->
+  <audio id="winSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
+  <audio id="bombSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3" preload="auto"></audio>
 
   <script>
     const premios = ["💣", "💣", "💣", "💣", "💣", "🎉 Você ganhou!"];
@@ -170,12 +165,12 @@
 
       if (resultado.includes("🎉")) {
         element.style.backgroundColor = "#28a745";
-        document.getElementById("winSound").play();
+        document.getElementById("winSound").play().catch(err => console.log("Erro no som de vitória:", err));
         alert("Parabéns! Você achou o bilhete premiado!");
       } else {
         element.style.backgroundColor = "#c0392b";
         element.style.color = "#fff";
-        document.getElementById("bombSound").play();
+        document.getElementById("bombSound").play().catch(err => console.log("Erro no som de bomba:", err));
         alert("💥 Bomba! Você perdeu.");
       }
 
@@ -183,7 +178,7 @@
       document.querySelectorAll('.ticket').forEach(t => t.onclick = null);
     }
 
-    // Criar partículas tecnológicas animadas
+    // Criar partículas animadas
     const container = document.getElementById('particlesContainer');
     for (let i = 0; i < 40; i++) {
       const p = document.createElement('div');
