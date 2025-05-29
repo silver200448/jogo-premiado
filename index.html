@@ -18,6 +18,8 @@
     h1 {
       margin-bottom: 30px;
       font-size: 2.5em;
+      z-index: 2;
+      position: relative;
     }
 
     .grid {
@@ -38,11 +40,11 @@
       font-size: 20px;
       transition: transform 0.4s ease, background-color 0.3s;
       user-select: none;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
       transform-style: preserve-3d;
       perspective: 1000px;
       color: #fff;
-      animation: float 4s ease-in-out infinite;
+      animation: pulse 2.5s infinite;
     }
 
     .ticket:hover {
@@ -50,20 +52,26 @@
       background: linear-gradient(145deg, #444, #666);
     }
 
-    @keyframes float {
-      0% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
-      100% {
-        transform: translateY(0px);
-      }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .bomb-effect {
+      animation: shake 0.5s ease-in-out 3;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
     }
 
     .buttons {
       margin-top: 40px;
+      z-index: 2;
+      position: relative;
     }
 
     .button {
@@ -77,6 +85,7 @@
       text-decoration: none;
       color: white;
       transition: transform 0.3s ease;
+      user-select: none;
     }
 
     .button:hover {
@@ -97,6 +106,7 @@
       margin-top: 30px;
       font-size: 16px;
       color: #f0f0f0;
+      user-select: none;
     }
 
     .particles {
@@ -116,10 +126,10 @@
       background: cyan;
       border-radius: 50%;
       opacity: 0.6;
-      animation: floatParticles 12s linear infinite;
+      animation: float 12s linear infinite;
     }
 
-    @keyframes floatParticles {
+    @keyframes float {
       0% {
         transform: translateY(100vh) scale(0.3);
         opacity: 0;
@@ -133,39 +143,22 @@
       }
     }
 
-    .bomb-effect {
-      animation: shake 0.5s;
-    }
-
-    @keyframes shake {
-      0%,
-      100% {
-        transform: translateX(0);
-      }
-      25% {
-        transform: translateX(-5px);
-      }
-      50% {
-        transform: translateX(5px);
-      }
-      75% {
-        transform: translateX(-5px);
-      }
-    }
-
+    /* Fogos de artifício */
     #fireworksCanvas {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
-      z-index: 10;
+      z-index: 5;
     }
   </style>
 </head>
 <body>
+
   <canvas id="fireworksCanvas"></canvas>
+
   <div class="particles" id="particlesContainer"></div>
 
   <h1>🎯 Escolha um bilhete... só um é premiado!</h1>
@@ -186,13 +179,13 @@
       Me siga e mande um oi, vou te falar mais sobre o Jogo:
     </div>
 
-    <a class="button instagram-button" href="https://instagram.com/silverton_moreira" target="_blank">
+    <a class="button instagram-button" href="https://instagram.com/silveron_moreira" target="_blank" rel="noopener noreferrer">
       📷 Instagram
     </a>
   </div>
 
-  <audio id="winSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
-  <audio id="bombSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3" preload="auto"></audio>
+  <audio id="winSound" src="https://www.myinstants.com/media/sounds/tuturu.mp3"></audio>
+  <audio id="bombSound" src="https://www.myinstants.com/media/sounds/explosion.mp3"></audio>
 
   <script>
     const premios = ["💣", "💣", "💣", "💣", "💣", "🎉 Você ganhou!"];
@@ -215,18 +208,19 @@
         element.style.color = "#fff";
         element.classList.add("bomb-effect");
         document.getElementById("bombSound").play().catch(() => {});
+        if (navigator.vibrate) navigator.vibrate(300);
         alert("💥 Bomba! Você perdeu.");
       }
 
       jogoEncerrado = true;
-      document.querySelectorAll(".ticket").forEach((t) => (t.onclick = null));
+      document.querySelectorAll('.ticket').forEach(t => t.onclick = null);
     }
 
-    // Partículas flutuando
-    const container = document.getElementById("particlesContainer");
+    // Criar partículas tecnológicas animadas
+    const container = document.getElementById('particlesContainer');
     for (let i = 0; i < 40; i++) {
-      const p = document.createElement("div");
-      p.classList.add("particle");
+      const p = document.createElement('div');
+      p.classList.add('particle');
       p.style.left = `${Math.random() * 100}%`;
       p.style.animationDuration = `${6 + Math.random() * 6}s`;
       p.style.animationDelay = `${Math.random() * 5}s`;
@@ -234,65 +228,103 @@
       container.appendChild(p);
     }
 
-    // Fogos de artifício
-    function launchFireworks() {
-      const canvas = document.getElementById("fireworksCanvas");
-      const ctx = canvas.getContext("2d");
+    // Fogos de artifício simples no canvas
+    const canvas = document.getElementById('fireworksCanvas');
+    const ctx = canvas.getContext('2d');
+    let fireworks = [];
+    let particles = [];
+
+    function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-      const particles = [];
-
-      for (let i = 0; i < 100; i++) {
-        particles.push({
-          x: canvas.width / 2,
-          y: canvas.height / 2,
-          angle: Math.random() * 2 * Math.PI,
-          speed: Math.random() * 5 + 2,
-          radius: Math.random() * 3 + 2,
-          alpha: 1,
-          decay: 0.015 + Math.random() * 0.015,
-          vx: 0,
-          vy: 0,
-        });
+    class Firework {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.particlesCount = 30;
+        this.particles = [];
+        this.createParticles();
       }
-
-      function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        for (let i = particles.length - 1; i >= 0; i--) {
-          const p = particles[i];
-          p.vx = Math.cos(p.angle) * p.speed;
-          p.vy = Math.sin(p.angle) * p.speed;
-
-          p.x += p.vx;
-          p.y += p.vy;
-          p.alpha -= p.decay;
-
-          if (p.alpha <= 0) {
-            particles.splice(i, 1);
-            continue;
-          }
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI, false);
-          ctx.fillStyle = `rgba(255, 215, 0, ${p.alpha})`; // dourado
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = "rgba(255, 215, 0, 0.7)";
-          ctx.fill();
-        }
-
-        if (particles.length > 0) {
-          requestAnimationFrame(animate);
+      createParticles() {
+        for(let i=0; i < this.particlesCount; i++) {
+          this.particles.push(new Particle(this.x, this.y));
         }
       }
+      update() {
+        this.particles.forEach(p => p.update());
+        this.particles = this.particles.filter(p => !p.dead);
+      }
+      draw() {
+        this.particles.forEach(p => p.draw());
+      }
+      isDone() {
+        return this.particles.length === 0;
+      }
+    }
 
-      animate();
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.radius = Math.random() * 3 + 2;
+        this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+        this.speedX = (Math.random() - 0.5) * 6;
+        this.speedY = (Math.random() - 0.5) * 6;
+        this.gravity = 0.05;
+        this.alpha = 1;
+        this.dead = false;
+      }
+      update() {
+        this.speedY += this.gravity;
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.alpha -= 0.02;
+        if (this.alpha <= 0) {
+          this.dead = true;
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 10;
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
 
-      // Para limpar depois de 4s (para não ocupar a tela para sempre)
-      setTimeout(() => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }, 4000);
+    function launchFireworks() {
+      const x = window.innerWidth / 2;
+      const y = window.innerHeight / 3;
+      fireworks.push(new Firework(x, y));
+      if (!animating) {
+        animating = true;
+        requestAnimationFrame(animate);
+      }
+    }
+
+    let animating = false;
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      fireworks.forEach((fw, index) => {
+        fw.update();
+        fw.draw();
+        if (fw.isDone()) {
+          fireworks.splice(index, 1);
+        }
+      });
+      if (fireworks.length > 0) {
+        requestAnimationFrame(animate);
+      } else {
+        animating = false;
+      }
     }
   </script>
 </body>
