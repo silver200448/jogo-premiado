@@ -12,10 +12,12 @@
       text-align: center;
       padding: 40px;
     }
+
     h1 {
       margin-bottom: 30px;
       font-size: 2.5em;
     }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -23,6 +25,7 @@
       max-width: 700px;
       margin: 0 auto;
     }
+
     .ticket {
       background-color: #444;
       padding: 50px 0;
@@ -32,11 +35,20 @@
       transition: transform 0.3s ease, background-color 0.3s;
       user-select: none;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      animation: pulse 2s infinite;
     }
+
     .ticket:hover {
       background-color: #666;
       transform: scale(1.05);
     }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
     .ranking {
       margin-top: 40px;
       background: rgba(255, 255, 255, 0.1);
@@ -46,6 +58,44 @@
       margin-left: auto;
       margin-right: auto;
     }
+
+    .buttons {
+      margin-top: 40px;
+    }
+
+    .button {
+      display: inline-block;
+      margin: 10px;
+      padding: 15px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+      transition: transform 0.3s ease;
+    }
+
+    .button:hover {
+      transform: scale(1.1);
+    }
+
+    .retry-button {
+      background: #28a745;
+      box-shadow: 0 4px 10px rgba(40, 167, 69, 0.6);
+    }
+
+    .instagram-button {
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      box-shadow: 0 4px 15px rgba(204, 35, 102, 0.6);
+    }
+
+    .follow-message {
+      margin-top: 30px;
+      font-size: 16px;
+      color: #f0f0f0;
+    }
+
     audio {
       display: none;
     }
@@ -54,6 +104,7 @@
 <body>
 
   <h1>🎯 Escolha um bilhete... só um é premiado!</h1>
+
   <div class="grid" id="ticketsGrid">
     <div class="ticket" onclick="reveal(this, 0)">Bilhete 1</div>
     <div class="ticket" onclick="reveal(this, 1)">Bilhete 2</div>
@@ -70,6 +121,18 @@
       <li>Maria - 2 vitórias</li>
       <li>Você? - 💡 Tente a sorte!</li>
     </ol>
+  </div>
+
+  <div class="buttons">
+    <button class="button retry-button" onclick="location.reload()">🔄 Tentar Novamente</button>
+
+    <div class="follow-message">
+      Me siga e mande um oi, vou te falar mais sobre o Jogo:
+    </div>
+
+    <a class="button instagram-button" href="https://instagram.com/silverton_moreira" target="_blank">
+      📷 Instagram
+    </a>
   </div>
 
   <audio id="winSound" src="https://www.myinstants.com/media/sounds/tuturu.mp3"></audio>
@@ -98,7 +161,6 @@
       }
 
       jogoEncerrado = true;
-
       const tickets = document.querySelectorAll('.ticket');
       tickets.forEach(t => t.onclick = null);
     }
