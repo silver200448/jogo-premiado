@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Bilhete Premiado</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #111, #333);
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .ticket {
+      background-color: #555;
+      padding: 50px 0;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 20px;
+      transition: 0.3s;
+      user-select: none;
+    }
+    .ticket:hover {
+      background-color: #777;
+    }
+    #restartBtn {
+      display: none;
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    #apoio a {
+      margin: 0 10px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Escolha um bilhete... só um é premiado!</h1>
+  <div class="grid" id="ticketsGrid">
+    <div class="ticket" onclick="reveal(this, 0)">Bilhete 1</div>
+    <div class="ticket" onclick="reveal(this, 1)">Bilhete 2</div>
+    <div class="ticket" onclick="reveal(this, 2)">Bilhete 3</div>
+    <div class="ticket" onclick="reveal(this, 3)">Bilhete 4</div>
+    <div class="ticket" onclick="reveal(this, 4)">Bilhete 5</div>
+    <div class="ticket" onclick="reveal(this, 5)">Bilhete 6</div>
+  </div>
+
+  <button id="restartBtn" onclick="restartGame()">Jogar Novamente</button>
+
+  <div id="apoio" style="display:none; margin-top: 40px;">
+    <h2>Curtiu o jogo? 🎉</h2>
+    <p>Me apoie seguindo no instagram! Isso me ajuda a continuar criando coisas legais. 😄</p>
+    <div style="margin: 15px;">
+      <a href="https://instagram.com/silverton_moreira" target="_blank" style="color: #e1306c;">📸 Instagram</a> |
+    </div>
+    <button onclick="compartilhar()" style="margin-top: 20px; padding: 10px 16px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer;">
+      Compartilhar com amigos 🔗
+    </button>
+  </div>
+
+  <script>
+    const premios = ["💣", "💣", "💣", "💣", "💣", "🎉 Você ganhou!"];
+    let embaralhado = premios.sort(() => Math.random() - 0.5);
+    let jogoEncerrado = false;
+
+    function reveal(element, index) {
+      if (jogoEncerrado) return;
+
+      const resultado = embaralhado[index];
+      element.innerHTML = resultado;
+
+      if (resultado.includes("🎉")) {
+        element.style.backgroundColor = "#28a745"; // verde
+        alert("Parabéns! Você achou o bilhete premiado!");
+      } else {
+        element.style.backgroundColor = "#c0392b"; // vermelho
+        element.style.color = "#fff";
+        alert("💥 Bomba! Você perdeu.");
+      }
+
+      jogoEncerrado = true;
+
+      const tickets = document.querySelectorAll('.ticket');
+      tickets.forEach(t => t.onclick = null);
+
+      document.getElementById('restartBtn').style.display = "inline-block";
+      document.getElementById('apoio').style.display = "block";
+    }
+
+    function restartGame() {
+      embaralhado = premios.sort(() => Math.random() - 0.5);
+      jogoEncerrado = false;
+
+      const tickets = document.querySelectorAll('.ticket');
+      tickets.forEach((t, i) => {
+        t.innerHTML = `Bilhete ${i + 1}`;
+        t.style.backgroundColor = "#555";
+        t.style.color = "white";
+        t.onclick = () => reveal(t, i);
+      });
+
+      document.getElementById('restartBtn').style.display = "none";
+      document.getElementById('apoio').style.display = "none";
+    }
+
+    function compartilhar() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Jogo do Bilhete Premiado 🎯',
+          text: 'Tente a sorte neste jogo divertido!',
+          url: window.location.href
+        });
+      } else {
+        alert('Seu navegador não suporta compartilhamento direto.');
+      }
+    }
+  </script>
+
+</body>
+</html>
